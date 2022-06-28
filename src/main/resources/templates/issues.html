@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Backlog API demo</title>    
+	<meta charset="utf-8" />
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}">
+	<script th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+	<script th:src="@{/js/issues.js}"></script>
+  </head>
+ 	<body>
+ 		
+ 		<input type="hidden" th:field="${pageHeader.myUserId}">
+ 		<input type="hidden" id="recordingStatusRecording" th:value="#{issues.recordingStatusRecording}">
+ 		<input type="hidden" id="recordingStatusStop" th:value="#{issues.recordingStatusStop}">
+ 		
+		<nav class="navbar navbar-light bg-light" th:object="${pageHeader}">
+			<div class="container-fluid">
+				<span class="navbar-brand" th:text="*{spaceDto.spaceName}"></span>
+				<div class="d-flex">
+        			<button type="button" onclick="location.href='/backlogApp/issues/init'" class="btn btn-outline-success">
+        				<i class="bi bi-arrow-clockwise"></i>
+        			</button>
+        		</div>
+			</div>
+		</nav>
+		<h1 th:text="#{issues.header}" class="ms-4"></h1>
+		<table class="table ms-4" th:object="${issuesView}">
+			<thead>
+				<tr>
+					<th><div class="text-center" th:text="#{issues.project}"></div></th>
+					<th><div class="text-center" th:text="#{issues.type}"></div></th>
+					<th><div class="text-center" th:text="#{issues.key}"></div></th>
+					<th><div class="text-center" th:text="#{issues.summary}"></div></th>
+					<th><div class="text-center" th:text="#{issues.assignee}"></div></th>
+					<th><div class="text-center" th:text="#{issues.status}"></div></th>
+					<th><div class="text-center" th:text="#{issues.priority}"></div></th>
+					<th><div class="text-center" th:text="#{issues.dueDate}"></div></th>
+					<th><div class="text-center" th:text="#{issues.estimatedHours}"></div></th>
+					<th>
+						<div class="text-center" th:text="#{issues.actualHours}"></div>
+						<div class="text-center" th:text="#{issues.actualHoursBacklog}"></div>
+					</th>
+					<th>
+						<div class="text-center" th:text="#{issues.actualHours}"></div>
+						<div class="text-center" th:text="#{issues.actualHoursMonitor}"></div>
+					</th>
+					<th><div class="text-center" th:text="#{issues.autoSetting}"></div></th>
+					<th class="pe-5"><div class="text-center" th:text="#{issues.recording}"></div></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="issue : *{issueDtoList}">
+					<td class="align-middle">
+						<div class="text-center" th:text="${issue.projectDto.projectName}"></div>
+						<div class="text-center text-secondary small" th:text="${issue.projectDto.projectKey}"></div>
+					</td>
+					<td class="align-middle">
+						<div class="text-center" th:text="${issue.issueTypeDto.typeName}"></div>
+					</td>
+					<td class="align-middle"><div th:text="${issue.issueKey}"></div></td>
+					<td class="align-middle"><div th:text="${issue.summary}"></div></td>
+					<td class="align-middle">
+						<div th:text="${issue.asigneeDto.userName}"></div>
+					</td>
+					<td class="align-middle">
+						<div class="text-center" th:text="${issue.statusDto.statusName}"></div>
+					</td>
+					<td class="align-middle">
+						<div class="text-center" th:text="${issue.priorityDto.priorityName}"></div>
+					</td>
+					<td class="align-middle"><div class="text-center" th:text="${issue.dueDateDisp}"></div></td>
+					<td class="align-middle"><div class="text-center" th:text="${issue.estimatedHoursDisp}"></div></td>
+					<td class="align-middle"><div class="text-center" th:text="${issue.actualHoursDisp}"></div></td>
+					<td class="align-middle"><div class="text-center" th:text="${issue.actualHoursDispOwn}"></div></td>
+					<td class="align-middle">
+						<div class="text-center"><input class="form-check-input" type="checkbox" 
+							th:checked="${issue.isAutoSetting}"
+							th:disabled="${pageHeader.myUserId != issue.asigneeUserNumberId}">
+						</div>
+					</td>
+					<td class="align-middle pe-5">
+						<div class="text-center">
+							<button class="btn btn-primary" type="button" name="btnRecording"
+								th:disabled="${pageHeader.myUserId != issue.asigneeUserNumberId or issue.status != 2}">
+								<th:block th:if="${issue.isRecording == true}">
+									<span th:name="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+									<span th:name="recordingText" th:text="#{issues.recordingStatusRecording}"></span>
+								</th:block>
+								<th:block th:if="${issue.isRecording == false}">
+									<span th:name="spinner" class="spinner-border-sm" role="status" aria-hidden="true"></span>
+									<span th:name="recordingText" th:text="#{issues.recordingStatusStop}"></span>
+								</th:block>
+							</button>
+						</div>
+					</td>
+					<th:block>
+						<input type="hidden" name="asigneeUserNumberId" th:value="${issue.asigneeUserNumberId}">
+						<input type="hidden" name="issueId" th:value="${issue.issueId}">
+					</th:block>
+				</tr>
+			</tbody>
+		</table>
+	</body>
+</html>

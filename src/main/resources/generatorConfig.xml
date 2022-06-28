@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+	<context id="tables" targetRuntime="MyBatis3">
+	
+		<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
+		<plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin" />
+
+		<jdbcConnection
+		driverClass="org.postgresql.Driver"
+			connectionURL="jdbc:postgresql://ec2-3-226-163-72.compute-1.amazonaws.com:5432/d94cjao1kisaka?sslmode=require"
+			userId="dukleaizoolatw"
+			password="2de664e9f777198b918019b6ffa542c4ae45f1f2deeb59d00b92b8c431e0fa92" />
+
+		<javaModelGenerator
+			targetPackage="com.example.demo.mybatis.model"
+			targetProject="backlogApp/src/main/java" />
+			
+		<sqlMapGenerator
+			targetPackage="com.example.demo.mybatis.mapper"
+			targetProject="backlogApp/src/main/resources" />
+			
+		<javaClientGenerator
+			type="XMLMAPPER"
+			targetPackage="com.example.demo.mybatis.mapper"
+			targetProject="backlogApp/src/main/java" />
+
+<!-- 		<table tableName="space_t01" /> -->
+		
+<!-- 		<table tableName="project_t01" /> -->
+		
+<!-- 		<table tableName="watch_t01" /> -->
+		
+		<table tableName="issue_t01" />
+		
+<!-- 		<table tableName="issue_t02_actual_hours"> -->
+<!-- 			<columnOverride column="work_actual_hours" javaType="java.math.BigDecimal"></columnOverride> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="user_t01" /> -->
+		
+<!-- 		<table tableName="issue_type_t01" /> -->
+		
+<!-- 		<table tableName="status_t01" /> -->
+		
+<!-- 		<table tableName="priority_t01" /> -->
+		
+	</context>
+</generatorConfiguration>
