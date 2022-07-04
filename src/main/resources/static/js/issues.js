@@ -51,8 +51,10 @@ $(function(){
 		// ボタン非活性化
 		disablButton();
 		
+		let issueRow = $('input:radio:checked').parents('tr');
+		
 		// 作業開始・終了ボタン
-		if($('input:radio:checked').parents('tr').find('[name="isWorking"]').val() == '1') {
+		if(issueRow.find('[name="isWorking"]').val() == $("#constIsWorking").val()) {
 			
 			$('#btnStop').prop('disabled', false);
 			
@@ -62,7 +64,7 @@ $(function(){
 		}
 		
 		// 削除ボタン
-		if($('input:radio:checked').parents('tr').find('[name="thisActualHours"]').text() != '-') {
+		if(issueRow.find('[name="thisActualHours"]').text() != $("#constHyphen").val()) {
 			
 			$('#btnDispModalDelete').prop('disabled', false);
 			
@@ -83,13 +85,13 @@ $(function(){
 		let issueRow = $('input:radio:checked').parents('tr');
 		
 		// 実績有無
-		if (issueRow.find('[name="thisActualHours"]').text() == '-') {
+		if (issueRow.find('[name="thisActualHours"]').text() == $("#constHyphen").val()) {
 			
 			return false;
 		}
 		
 		// 作業中
-		if (issueRow.find('[name="isWorking"]').val() == '1') {
+		if (issueRow.find('[name="isWorking"]').val() == $("#constIsWorking").val()) {
 			
 			return false;
 		}
@@ -165,15 +167,15 @@ $(function(){
 		// クリック防止解除
 		if (isStart) {
 			
-			$('input:radio:checked').parents('tr').find('[name="workStatus"]').text('作業中');
+			$('input:radio:checked').parents('tr').find('[name="workStatus"]').text($("#constWorkingText").val());
 			
-			$('input:radio:checked').parents('tr').find('[name="isWorking"]').val('1');
+			$('input:radio:checked').parents('tr').find('[name="isWorking"]').val($("#constIsWorking").val());
 			
 		} else {
 			
-			$('input:radio:checked').parents('tr').find('[name="workStatus"]').text('-');
+			$('input:radio:checked').parents('tr').find('[name="workStatus"]').text($("#constHyphen").val());
 			
-			$('input:radio:checked').parents('tr').find('[name="isWorking"]').val('0');
+			$('input:radio:checked').parents('tr').find('[name="isWorking"]').val($("#constIsNotWorking").val());
 		}
 	}
 	
@@ -182,7 +184,14 @@ $(function(){
 	/////////////////////////////////////////////////////////////////
 	function registerFail() {
 		
-		alert('登録失敗しました。');
+		// 通知モーダル初期化
+		initModalNotification();
+		
+		$('#modalNotification').find('i').addClass('bi bi-x-circle');
+		$('#modalNotification').find('span').text($('#constMsgRefisterFail').val());
+		
+		// 通知モーダル表示
+		$('#modalNotification').modal('show');
 	}
 	
 	/////////////////////////////////////////////////////////////////
@@ -234,11 +243,23 @@ $(function(){
 	function deleteSuccess() {
 		
 		// 作業実績
-		$('input:radio:checked').parents('tr').find('[name="thisActualHours"]').text('-');
+		$('input:radio:checked').parents('tr').find('[name="thisActualHours"]').text($("#constHyphen").val());
 		
-		$('input:radio:checked').parents('tr').find('[name="workStatus"]').text('-');
+		$('input:radio:checked').parents('tr').find('[name="workStatus"]').text($("#constHyphen").val());
 		
-		$('input:radio:checked').parents('tr').find('[name="isWorking"]').val('0');
+		$('input:radio:checked').parents('tr').find('[name="isWorking"]').val($("#constIsNotWorking").val());
+		
+		// 確認モーダル閉じる
+		$('#modalDelete').modal('hide');
+		
+		// 通知モーダル初期化
+		initModalNotification();
+		
+		$('#modalNotification').find('i').addClass('bi bi-check-circle');
+		$('#modalNotification').find('span').text($('#constMsgDeleteSuccess').val());
+		
+		// 通知モーダル表示
+		$('#modalNotification').modal('show');
 	}
 	
 	/////////////////////////////////////////////////////////////////
@@ -246,7 +267,16 @@ $(function(){
 	/////////////////////////////////////////////////////////////////
 	function deleteFail() {
 		
-		alert('削除失敗しました。');
+		// 確認モーダル閉じる
+		$('#modalDelete').modal('hide');
+		
+		// 通知モーダル初期化
+		initModalNotification();
+		
+		$('#modalNotification').find('i').addClass('bi bi-x-circle');
+		$('#modalNotification').find('span').text($('#constMsgDeleteFail').val());
+		
+		$('#modalNotification').modal('show');
 	}
 	
 	function deleteAlways() {
@@ -299,14 +329,36 @@ $(function(){
 		let thisActualHours = $('input:radio:checked').parents('tr').find('[name="thisActualHours"]').text();
 		
 		$('input:radio:checked').parents('tr').find('[name="backlogActualHours"]').text(thisActualHours);
+		
+		// 確認モーダル閉じる
+		$('#modalSend').modal('hide')
+		
+		// 通知モーダル初期化
+		initModalNotification();
+		
+		$('#modalNotification').find('i').addClass('bi bi-check-circle');
+		$('#modalNotification').find('span').text($('#constMsgSendSuccess').val());
+		
+		// 通知モーダル表示
+		$('#modalNotification').modal('show');
 	} 
 	
 	/////////////////////////////////////////////////////////////////
 	// 作業実績送信失敗時
 	/////////////////////////////////////////////////////////////////
-	function sendFail(msg) {
+	function sendFail() {
 		
-		alert("送信に失敗しました。" + msg);
+		// 確認モーダル閉じる
+		$('#modalSend').modal('hide')
+		
+		// 通知モーダル初期化
+		initModalNotification();
+		
+		$('#modalNotification').find('i').addClass('bi bi-check-circle');
+		$('#modalNotification').find('span').text($('#constMsgSendFail').val());
+		
+		// 通知モーダル表示
+		$('#modalNotification').modal('show');
 	} 
 	
 	/////////////////////////////////////////////////////////////////
@@ -318,5 +370,14 @@ $(function(){
 		controllButton();
 		
 		$('#modalSend').modal('hide')
+	}
+	
+	/////////////////////////////////////////////////////////////////
+	// 通知モーダル初期化
+	/////////////////////////////////////////////////////////////////
+	function initModalNotification() {
+		
+		$('#modalNotification').find('i').removeClass();
+		$('#modalNotification').find('span').text("");
 	} 
 });
