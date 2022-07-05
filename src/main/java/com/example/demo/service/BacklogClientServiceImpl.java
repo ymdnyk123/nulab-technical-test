@@ -19,15 +19,12 @@ import com.nulabinc.backlog4j.auth.OnAccessTokenRefreshListener;
 import com.nulabinc.backlog4j.conf.BacklogConfigure;
 import com.nulabinc.backlog4j.conf.BacklogJpConfigure;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * BacklogClientサービス
  * 
  * @author user
  */
 @Service
-@Slf4j
 public class BacklogClientServiceImpl implements BacklogClientService {
 	
 	/**
@@ -41,8 +38,6 @@ public class BacklogClientServiceImpl implements BacklogClientService {
 		
 		if (Objects.isNull(authorizedClient)) {
 			
-			log.debug("OAuth2AuthorizedClient is NULL.");
-			
 			return null;
 		}
 		
@@ -53,11 +48,6 @@ public class BacklogClientServiceImpl implements BacklogClientService {
 		
 		// アクセストークン有効期限
 		Long expires = this.getAccessTokenExpires(authorizedClient.getAccessToken().getExpiresAt());
-		
-		if (Objects.isNull(expires)) {
-			
-			// TODO 再ログイン
-		}
 		
 		// アクセストークン設定
 		AccessToken accessToken = new AccessToken(
@@ -78,7 +68,7 @@ public class BacklogClientServiceImpl implements BacklogClientService {
 		// リスナー
 		support.setOnAccessTokenRefreshListener(
 				this.getListener(accessToken));
-
+		
 		// BacklogClient作成
 		BacklogClient backlogClient = new BacklogClientFactory(configure).newClient();
 		

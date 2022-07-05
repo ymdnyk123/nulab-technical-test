@@ -25,12 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class IssueServiceImpl implements IssueService {
+public class WorkHoursServiceImpl implements WorkHoursService {
 	
 	private final WorkHoursMapper workHoursMapper;
 	
 	@Autowired
-	public IssueServiceImpl(WorkHoursMapper workHoursMapper) {
+	public WorkHoursServiceImpl(WorkHoursMapper workHoursMapper) {
 		
 		this.workHoursMapper = workHoursMapper;
 	}
@@ -74,19 +74,22 @@ public class IssueServiceImpl implements IssueService {
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	@Override
-	public void register(Long userId, Long issueId, Boolean isWorking) {
+	public int register(Long userId, Long issueId, Boolean isWorking) {
 		
+		int cnt = 0;
 		
 		if (isWorking) {
 			
 			// 作業開始
-			this.insertWorkHours(userId, issueId);
+			cnt = this.insertWorkHours(userId, issueId);
 			
 		} else {
 			
 			// 作業終了
-			this.updateWorkHours(userId, issueId);
+			cnt = this.updateWorkHours(userId, issueId);
 		}
+		
+		return cnt;
 	}
 	
 	/**
@@ -95,7 +98,7 @@ public class IssueServiceImpl implements IssueService {
 	 * @param userId
 	 * @param issueId
 	 */
-	private void insertWorkHours(Long userId, Long issueId) {
+	private int insertWorkHours(Long userId, Long issueId) {
 		
 		// 登録データ
 		WorkHours workHours = new WorkHours();
@@ -123,6 +126,8 @@ public class IssueServiceImpl implements IssueService {
 		
 		log.info("作業開始 登録[{}] uid[{}] iid[{}] seq[{}]",
 				cnt, workHours.getUserId(), workHours.getIssueId(), workHours.getSequence());
+		
+		return cnt;
 	}
 	
 	/**
@@ -131,7 +136,7 @@ public class IssueServiceImpl implements IssueService {
 	 * @param userId
 	 * @param issueId
 	 */
-	private void updateWorkHours(Long userId, Long issueId) {
+	private int updateWorkHours(Long userId, Long issueId) {
 		
 		// 更新データ
 		WorkHours workHours = new WorkHours();
@@ -162,6 +167,8 @@ public class IssueServiceImpl implements IssueService {
 		
 		log.info("作業終了 更新[{}] uid[{}] iid[{}] seq[{}]",
 				cnt, workHours.getUserId(), workHours.getIssueId(), workHours.getSequence());
+		
+		return cnt;
 	}
 	
 	/**
@@ -263,9 +270,9 @@ public class IssueServiceImpl implements IssueService {
 	 * @param userId
 	 * @param issueId
 	 */
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@Override
-	public void delete(Long userId, Long issueId) {
+	public int delete(Long userId, Long issueId) {
 		
 		WorkHoursExample example = new WorkHoursExample();
 		
@@ -281,5 +288,7 @@ public class IssueServiceImpl implements IssueService {
 		int cnt = this.workHoursMapper.deleteByExample(example);
 		
 		log.info("実績削除 削除[{}] uid[{}] iid[{}]", cnt, userId, issueId);
+		
+		return cnt;
 	}
 }

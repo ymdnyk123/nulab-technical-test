@@ -1,19 +1,24 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-<title>Demo Application OAuth 2.0 Login with Spring Security 5 -
-	User Attributes -</title>
-<meta charset="utf-8" />
-</head>
-
+<html
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	<head>
+		<title th:text="#{app.title}"></title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
+		<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}">
+		<script th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+		<script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+		<script th:src="@{/webjars/jquery-cookie/1.4.1-1/jquery.cookie.js}"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+		<link rel="stylesheet" th:href="@{/css/style.css}">
+	</head>
 <body>
-	<div th:replace="index::logout"></div>
-	<!-- 認証ユーザの名前、ログアウトボタン -->
-	<h1>Demo Application OAuth 2.0 Login with Spring Security 5 - User
-		Attributes -</h1>
+	<div th:replace="header::header(${spaceName})"></div>
 	<div>
-		エラーが発生しました。
+		エラーが発生しました。<br>
+		ログインし直してください
 	</div>
 </body>
 </html>

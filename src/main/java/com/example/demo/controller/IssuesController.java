@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.demo.common.constant.AttributeName;
 import com.example.demo.common.constant.Format;
+import com.example.demo.common.constant.PageId;
 import com.example.demo.common.constant.Symbol;
 import com.example.demo.common.util.ConversionUtil;
 import com.example.demo.dto.IssueRow;
@@ -41,8 +43,9 @@ import com.example.demo.dto.StatusDisp;
 import com.example.demo.dto.UserDisp;
 import com.example.demo.mybatis.model.WorkHours;
 import com.example.demo.service.BacklogClientService;
-import com.example.demo.service.IssueService;
+import com.example.demo.service.WorkHoursService;
 import com.nulabinc.backlog4j.BacklogClient;
+import com.nulabinc.backlog4j.Issue;
 import com.nulabinc.backlog4j.IssueType;
 import com.nulabinc.backlog4j.Priority;
 import com.nulabinc.backlog4j.Project;
@@ -63,19 +66,17 @@ public class IssuesController {
 	
 	private final BacklogClientService backlogClientService;
 	
-	private final IssueService issueService;
-	
-	private BacklogClient backlogClient;
+	private final WorkHoursService workHoursService;
 	
 	@Autowired
 	public IssuesController(
 			OAuth2AuthorizedClientService authorizedClientService, 
 			BacklogClientService backlogClientService,
-			IssueService issueService) {
+			WorkHoursService workHoursService) {
 		
 		this.authorizedClientService = authorizedClientService;
 		this.backlogClientService = backlogClientService;
-		this.issueService = issueService;
+		this.workHoursService = workHoursService;
 	}
 	
 	/**
@@ -86,67 +87,41 @@ public class IssuesController {
 	 * @return
 	 */
 	@GetMapping("/")
-	public String init(OAuth2AuthenticationToken authentication, Model model) {
+	public String init(OAuth2AuthenticationToken authentication, Model model) throws MalformedURLException {
 		
 		// 画面に表示するために、OAuth2AuthorizedClientService経由で認可済みのクライアント情報を取得しModelに格納
-		model.addAttribute("authorizedClient", this.getAuthorizedClient(authentication));
+		model.addAttribute(AttributeName.AUTH_CLIENT, this.getAuthorizedClient(authentication));
 		
 		OAuth2AuthorizedClient authorizedClient = this.getAuthorizedClient(authentication);
 		
 		if (Objects.isNull(authorizedClient)) {
 			
-			return "loginForm";
+			return PageId.LOGIN;
 		}
 		
-		if (Objects.isNull(this.backlogClient)) {
-			
-			try {
-				
-				// BacklogClient取得
-				this.backlogClient = this.backlogClientService.getClient(authorizedClient);
-				
-			} catch (MalformedURLException e) {
-				
-				e.printStackTrace();
-				
-				return "loginForm";
-				
-			} catch (IllegalArgumentException e) {
-				
-				e.printStackTrace();
-				
-				return "loginForm";
-			}
-		}
+		// BacklogClient取得
+		BacklogClient backlogClient = this.backlogClientService.getClient(authorizedClient);
 		
 		// スペース情報取得
-		Space space = this.backlogClient.getSpace();
+		Space space = backlogClient.getSpace();
 		
-		String spaceName = space.getName();
-		
-		model.addAttribute("spaceName", spaceName);
+		model.addAttribute(AttributeName.SPACE_NAME, space.getName());
 		
 		// プロジェクトリスト取得
-		ResponseList<Project> projectList = this.backlogClient.getProjects();
+		ResponseList<Project> projectList = backlogClient.getProjects();
 		
 		// 認証ユーザID
-		Long myUserId = ConversionUtil.toLong(
-				String.valueOf((Object)authentication.getPrincipal().getAttribute("id")));
-		
-		if (Objects.isNull(myUserId)) {
-			
-			return "loginForm";
-		}
+		Long myUserId = this.getMyUserId(authentication);
 		
 		// ウォッチ取得
-		ResponseList<Watch> userWatches = this.backlogClient.getUserWatches(myUserId);
+		ResponseList<Watch> userWatches = backlogClient.getUserWatches(myUserId);
 		
 		// ウォッチ課題リスト取得
 		List<IssueRow> issueRowList = this.getIssueRowList(userWatches, projectList, myUserId);
 		
-		model.addAttribute("issueRowList", issueRowList);
+		model.addAttribute(AttributeName.ISSUE_ROW_LIST, issueRowList);
 		
-		return "issues";
+		return PageId.ISSUES;
 	}
 	
 	/**
@@ -173,10 +148,16 @@ public class IssuesController {
 		Long myUserId = this.getMyUserId(authentication);
 		
 		// 作業実績登録
-		this.issueService.register(myUserId, requestParamRegister.getIssueId(), requestParamRegister.getIsStart());
+		int cnt = this.workHoursService.register(
+				myUserId, requestParamRegister.getIssueId(), requestParamRegister.getIsStart());
+		
+		if (cnt <= 0) {
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
 		
 		// 作業実績取得
-		List<WorkHours> workHoursList = this.issueService.select(myUserId, requestParamRegister.getIssueId());
+		List<WorkHours> workHoursList = this.workHoursService.select(myUserId, requestParamRegister.getIssueId());
 		
 		String actualHours = this.getThisActualHours(workHoursList);
 		
@@ -206,7 +187,12 @@ public class IssuesController {
 		Long myUserId = this.getMyUserId(authentication);
 		
 		// 作業実績削除
-		this.issueService.delete(myUserId, requestParamDelete.getIssueId());
+		int cnt = this.workHoursService.delete(myUserId, requestParamDelete.getIssueId());
+		
+		if (cnt <= 0) {
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	/**
@@ -215,25 +201,70 @@ public class IssuesController {
 	 * @param authentication
 	 * @param issueId
 	 * @return
+	 * @throws MalformedURLException 
 	 */
 	@PostMapping("/send")
 	@ResponseBody
 	public void send(
 			OAuth2AuthenticationToken authentication, 
 			@Validated @RequestBody RequestParamSend requestParamSend,
-			BindingResult bindingResult) {
+			BindingResult bindingResult) throws MalformedURLException {
 		
 		if (bindingResult.hasErrors()) {
 			
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		
+		OAuth2AuthorizedClient authorizedClient = this.getAuthorizedClient(authentication);
+		
+		if (Objects.isNull(authorizedClient)) {
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+		
+		
 		// 課題パラメータ
 		UpdateIssueParams params = new UpdateIssueParams(requestParamSend.getIssueId())
 				.actualHours(requestParamSend.getActualHours());
 		
+		// 認証ユーザID
+		Long myUserId = this.getMyUserId(authentication);
+		
+		BacklogClient backlogClient = this.backlogClientService.getClient(authorizedClient);
+		
+		if (!this.checkSendData(backlogClient, requestParamSend.getIssueId(), myUserId)) {
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+		
 		// 課題更新
-		this.backlogClient.updateIssue(params);
+		backlogClient.updateIssue(params);
+	}
+	
+	/**
+	 * 送信前チェック
+	 * 
+	 * @param backlogClient
+	 * @param issueId
+	 * @param myUserId
+	 * @return チェック結果（true：OK、false：NG）
+	 */
+	private boolean checkSendData(BacklogClient backlogClient, Long issueId, Long myUserId) {
+		
+		// 更新対象課題取得
+		Issue issue = backlogClient.getIssue(issueId);
+		
+		if (Objects.isNull(issue.getAssignee())) {
+			
+			return true;
+		}
+		
+		if (myUserId.equals(issue.getAssignee().getId())) {
+			
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -272,7 +303,7 @@ public class IssuesController {
 			}
 			
 			// 作業実績リスト取得
-			List<WorkHours> workHoursList = this.issueService.select(myUserId, watch.getIssue().getId());
+			List<WorkHours> workHoursList = this.workHoursService.select(myUserId, watch.getIssue().getId());
 			
 			IssueRow issueRow = new IssueRow();
 			
@@ -565,7 +596,7 @@ public class IssuesController {
 		
 		// 認証ユーザID
 		Long myUserId = ConversionUtil.toLong(
-				String.valueOf((Object)authentication.getPrincipal().getAttribute("id")));
+				String.valueOf((Object)authentication.getPrincipal().getAttribute(AttributeName.AUTH_ID)));
 		
 		if (Objects.isNull(myUserId)) {
 			
