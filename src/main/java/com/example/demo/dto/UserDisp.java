@@ -1,13 +1,12 @@
 package com.example.demo.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * 種別
  */
+@Data
 public class UserDisp {
-	@Getter
-	@Setter
+	
     private String name;
 }

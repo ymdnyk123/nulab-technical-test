@@ -1,18 +1,14 @@
 package com.example.demo.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * 種別
  */
+@Data
 public class IssueTypeDisp {
 	
-	@Getter
-	@Setter
     private String name;
 
-	@Getter
-	@Setter
     private String color;
 }

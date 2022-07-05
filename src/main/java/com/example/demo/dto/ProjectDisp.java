@@ -1,17 +1,14 @@
 package com.example.demo.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * プロジェクト
  */
+@Data
 public class ProjectDisp {
-	@Getter
-	@Setter
+	
     private String name;
 
-	@Getter
-	@Setter
     private String projectKey;
 }

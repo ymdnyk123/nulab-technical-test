@@ -1,14 +1,12 @@
 package com.example.demo.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * 優先度
  */
+@Data
 public class PriorityDisp {
 	
-	@Getter
-	@Setter
     private String name;
 }

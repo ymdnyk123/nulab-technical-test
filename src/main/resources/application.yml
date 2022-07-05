@@ -9,10 +9,19 @@ spring:
       client:
         registration:
           backlog:
-            clientId: drJVPahnbP2xQe9NZcjO9YdMe3i5S7Bd
-            clientSecret: 0K9qLxjU1ZL0LtK5uqVBdK0PNfJQHsAeHvcf8KfDCh3vHwiMLtbBk6F4K0IhmDXE
+            #********************************************************************************
+            # local
+            #********************************************************************************
+            #clientId: drJVPahnbP2xQe9NZcjO9YdMe3i5S7Bd
+            #clientSecret: 0K9qLxjU1ZL0LtK5uqVBdK0PNfJQHsAeHvcf8KfDCh3vHwiMLtbBk6F4K0IhmDXE
             #redirectUri: http://localhost:8080/login/oauth2/code/backlog
+            #********************************************************************************
+            # heroku            
+            #********************************************************************************
+            clientId: JepWI6VHsIVZBGSfNtRqUX8Brz914t2E
+            clientSecret: HskeXqNJ4w9KN10GrukVeolo6VeauGNRVMu3FEuEu8SbIwonsCjSVtf0D7e0MMzu
             redirectUri: https://issues-actual-register.herokuapp.com/login/oauth2/code/backlog
+            #********************************************************************************
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             client-name: backlog
