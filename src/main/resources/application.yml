@@ -11,7 +11,8 @@ spring:
           backlog:
             clientId: drJVPahnbP2xQe9NZcjO9YdMe3i5S7Bd
             clientSecret: 0K9qLxjU1ZL0LtK5uqVBdK0PNfJQHsAeHvcf8KfDCh3vHwiMLtbBk6F4K0IhmDXE
-            redirectUri: http://localhost:8080/login/oauth2/code/backlog
+            #redirectUri: http://localhost:8080/login/oauth2/code/backlog
+            redirectUri: https://issues-actual-register.herokuapp.com/login/oauth2/code/backlog
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             client-name: backlog
@@ -22,6 +23,6 @@ spring:
             userInfoUri: https://nulab-exam.backlog.jp/api/v2/users/myself 
             user-info-authentication-method: GET
             user-name-attribute: name
-logging:
-  level:
-    '[org.springframework.security]': debug
+#logging:
+#  level:
+#    '[org.springframework.security]': debug
