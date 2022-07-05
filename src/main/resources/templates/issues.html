@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	<head>
+		<title th:text="#{app.title}"></title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
+		<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}">
+		<script th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+		<script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+		<script th:src="@{/webjars/jquery-cookie/1.4.1-1/jquery.cookie.js}"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+		<link rel="stylesheet" th:href="@{/css/style.css}">
+		<script th:src="@{/js/issues.js}"></script>
+	</head>
+ 	<body>
+		
+		<div th:replace="header::header(${spaceName})"></div>
+		
+		<h4 class="bg-light text-dark ps-2 pt-2 mb-0">
+				<i class="bi bi-eye"></i>
+				<span th:text="#{issues.header}"></span>
+		</h4>
+		
+		<div class="d-grid bg-light text-dark gap-2 d-md-flex justify-content-md-end pt-1">
+			<button class="btn btn-primary me-md-2" type="button"
+				id="btnStart" disabled>
+				<i class="bi bi-play-fill me-1"></i>
+				<span th:text="#{issues.btn.start}"></span>
+			</button>
+			<button class="btn btn-primary me-md-2" type="button"
+				id="btnStop" disabled>
+				<i class="bi bi-stop-fill me-1"></i>
+				<span th:text="#{issues.btn.stop}"></span>
+			</button>
+			<button class="btn btn-danger me-md-2" type="button" id="btnDispModalDelete" disabled
+				 data-bs-toggle="modal" th:data-bs-target="'#' + #{modal.id.delete}">
+				<i class="bi bi-trash me-1"></i>
+				<span th:text="#{issues.btn.dispModalDelete}"></span>
+			</button>
+			<button class="btn btn-success me-md-2" type="button" id="btnDispModalSend" disabled
+				data-bs-toggle="modal" th:data-bs-target="'#' + #{modal.id.send}">
+				<i class="bi bi-send me-1"></i>
+				<span th:text="#{issues.btn.dispModalSend}"></span>
+			</button>
+		</div>
+		<div class="pt-2 bg-light text-dark border-bottom border-dark"></div>
+	<div class="ps-3 pt-2">
+		<table class="table table-hover table-striped" th:object="${issuesView}">
+			<thead>
+				<tr>
+					<th></th>
+					<th class="align-middle"><div class="text-center" th:text="#{issues.project}"></div></th>
+					<th class="align-middle"><div class="text-center" th:text="#{issues.type}"></div></th>
+					<th class="align-middle"><div class="text-center" th:text="#{issues.key}"></div></th>
+					<th class="align-middle"><div class="text-center" th:text="#{issues.summary}"></div></th>
+					<th class="align-middle"><div class="text-center" th:text="#{issues.assignee}"></div></th>
+					<th class="align-middle"><div class="text-center" th:text="#{issues.status}"></div></th>
+					<th class="align-middle"><div class="text-center" th:text="#{issues.priority}"></div></th>
+					<th class="align-middle"><div class="text-center" th:text="#{issues.dueDate}"></div></th>
+					<th class="align-middle"><div class="text-center" th:text="#{issues.estimatedHours}"></div></th>
+					<th class="align-middle">
+						<div class="text-center">
+							<img src="/images/Backlog_icon.png" class="icon mb-1">
+							<span th:text="#{issues.actualHours}"></span>
+						</div>
+					</th>
+					<th class="align-middle">
+						<div class="text-center">
+							<i class="bi bi-clock-history"></i>
+							<span th:text="#{issues.actualHours}"></span>
+						</div>
+					</th>
+					<th class="align-middle"><div class="text-center" th:text="#{issues.workStatus}"></div></th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<tr th:each="issue : ${issueRowList}">
+					<td class="align-middle">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" th:disabled="${!issue.canOperate}"
+								name="issueId" th:value="${issue.issueId}">
+						</div>
+					</td>
+					<td class="align-middle">
+						<div class="text-center" th:text="${issue.project.name}"></div>
+						<div class="text-center text-secondary small" th:text="${issue.project.projectKey}"></div>
+					</td>
+					<td class="align-middle">
+						<div class="text-center rounded-pill" th:style="|background-color: ${issue.issueType.color};|">
+							<span th:text="${issue.issueType.name}"></span>
+						</div>
+					</td>
+					<td class="align-middle"><div th:text="${issue.issueKey}"></div></td>
+					<td class="align-middle"><div th:text="${issue.summary}"></div></td>
+					<td class="align-middle">
+						<div th:text="${issue.asignee.name}"></div>
+					</td>
+					<td class="align-middle">
+						<div class="text-center rounded-pill" th:style="|background-color: ${issue.status.color};|">
+							<span th:text="${issue.status.name}"></span>
+						</div>
+					</td>
+					<td class="align-middle">
+						<div class="text-center" th:text="${issue.priority.name}"></div>
+					</td>
+					<td class="align-middle"><div class="text-center" th:text="${issue.dueDate}"></div></td>
+					<td class="align-middle"><div class="text-center" th:text="${issue.estimatedHours}"></div></td>
+					<td class="align-middle">
+						<div class="text-center" th:text="${issue.backlogActualHours}" th:name="backlogActualHours"></div>
+					</td>
+					<td class="align-middle">
+						<div class="text-center" th:text="${issue.thisActualHours}" th:name="thisActualHours"></div>
+					</td>
+					<td class="align-middle"><div class="text-center">
+						<th:block th:if="${issue.isWorking}">
+							<span th:name="workStatus" th:text="#{issues.workingText}"></span>
+							<input type="hidden" name="isWorking" th:value="#{issues.working.ture}">
+						</th:block>
+						<th:block th:if="${!issue.isWorking}">
+							<span th:name="workStatus" th:text="#{issues.hyphen}"></span>
+							<input type="hidden" name="isWorking" th:value="#{issues.working.false}">
+						</th:block>
+					</div></td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+	</body>
+	
+	<input type="hidden" id="constWorkingText" th:value="#{issues.workingText}">
+ 	<input type="hidden" id="constHyphen" th:value="#{issues.hyphen}">
+ 	<input type="hidden" id="constIsWorking" th:value="#{issues.working.ture}">
+ 	<input type="hidden" id="constIsNotWorking" th:value="#{issues.working.false}">
+ 	<input type="hidden" id="constMsgRefisterFail" th:value="#{modal.msg.register.fail}">
+ 	<input type="hidden" id="constMsgDeleteSuccess" th:value="#{modal.msg.delete.success}">
+ 	<input type="hidden" id="constMsgDeleteFail" th:value="#{modal.msg.delete.fail}">
+ 	<input type="hidden" id="constMsgSendSuccess" th:value="#{modal.msg.send.success}">
+ 	<input type="hidden" id="constMsgSendFail" th:value="#{modal.msg.send.fail}">
+ 	
+	<div th:replace="modal::confirm(
+		#{modal.id.delete}, #{modal.msg.delete},#{modal.btn.id.delete}, #{modal.btn.delete})"></div>
+	<div th:replace="modal::confirm(
+		#{modal.id.send}, #{modal.msg.send}, #{modal.btn.id.send}, #{modal.btn.send})"></div>
+	<div th:replace="modal::notification(#{modal.id.notification})"></div>
+</html>

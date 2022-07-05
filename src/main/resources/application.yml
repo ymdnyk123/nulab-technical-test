@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://ec2-3-226-163-72.compute-1.amazonaws.com:5432/d94cjao1kisaka?sslmode=require
+    username: dukleaizoolatw
+    password: 2de664e9f777198b918019b6ffa542c4ae45f1f2deeb59d00b92b8c431e0fa92
+    driver-class-name: org.postgresql.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          backlog:
+            clientId: drJVPahnbP2xQe9NZcjO9YdMe3i5S7Bd
+            clientSecret: 0K9qLxjU1ZL0LtK5uqVBdK0PNfJQHsAeHvcf8KfDCh3vHwiMLtbBk6F4K0IhmDXE
+            redirectUri: http://localhost:8080/login/oauth2/code/backlog
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            client-name: backlog
+        provider:
+          backlog:
+            authorizationUri: https://nulab-exam.backlog.jp/OAuth2AccessRequest.action
+            tokenUri: https://nulab-exam.backlog.jp/api/v2/oauth2/token
+            userInfoUri: https://nulab-exam.backlog.jp/api/v2/users/myself 
+            user-info-authentication-method: GET
+            user-name-attribute: name
+logging:
+  level:
+    '[org.springframework.security]': debug
