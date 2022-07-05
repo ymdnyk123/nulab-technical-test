@@ -17,11 +17,9 @@
 		<nav class="navbar navbar-dark" th:style="|background-color: #{color.nav};|">
 			<div class="container-fluid">
 				<span class="navbar-brand" th:text="${space}"></span>
-				<form action="#" th:action="@{/logout}" method="post">
-					<th:block sec:authorize="isAuthenticated()">
+				<form action="#" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
 						<span sec:authentication="name"></span>
 						<span th:text="#{issues.honorificTitle}" class="me-2"></span>
-					</th:block>
 					<input type="submit" th:value="#{issues.btn.logout}" class="btn btn-link" />
 				</form>
 			</div>
