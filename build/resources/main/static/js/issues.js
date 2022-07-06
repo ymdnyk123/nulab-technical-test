@@ -187,7 +187,7 @@ $(function(){
 		// 通知モーダル初期化
 		initModalNotification();
 		
-		$('#modalNotification').find('i').addClass('bi bi-x-circle');
+		$('#modalNotification').find('i').addClass('bi bi-x-circle text-danger');
 		$('#modalNotification').find('span').text($('#constMsgRefisterFail').val());
 		
 		// 通知モーダル表示
@@ -255,7 +255,7 @@ $(function(){
 		// 通知モーダル初期化
 		initModalNotification();
 		
-		$('#modalNotification').find('i').addClass('bi bi-check-circle');
+		$('#modalNotification').find('i').addClass('bi bi-check-circle text-success');
 		$('#modalNotification').find('span').text($('#constMsgDeleteSuccess').val());
 		
 		// 通知モーダル表示
@@ -273,7 +273,7 @@ $(function(){
 		// 通知モーダル初期化
 		initModalNotification();
 		
-		$('#modalNotification').find('i').addClass('bi bi-x-circle');
+		$('#modalNotification').find('i').addClass('bi bi-x-circle text-danger');
 		$('#modalNotification').find('span').text($('#constMsgDeleteFail').val());
 		
 		$('#modalNotification').modal('show');
@@ -336,7 +336,7 @@ $(function(){
 		// 通知モーダル初期化
 		initModalNotification();
 		
-		$('#modalNotification').find('i').addClass('bi bi-check-circle');
+		$('#modalNotification').find('i').addClass('bi bi-check-circle text-success');
 		$('#modalNotification').find('span').text($('#constMsgSendSuccess').val());
 		
 		// 通知モーダル表示
@@ -354,7 +354,7 @@ $(function(){
 		// 通知モーダル初期化
 		initModalNotification();
 		
-		$('#modalNotification').find('i').addClass('bi bi-check-circle');
+		$('#modalNotification').find('i').addClass('bi bi-check-circle text-success');
 		$('#modalNotification').find('span').text($('#constMsgSendFail').val());
 		
 		// 通知モーダル表示

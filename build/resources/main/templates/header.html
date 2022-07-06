@@ -14,9 +14,10 @@
 	</head>
  	
  	<div th:fragment="header(space)" th:remove="tag">
-		<nav class="navbar navbar-dark" th:style="|background-color: #{color.nav};|">
+		<nav class="navbar navbar-dark">
 			<div class="container-fluid">
-				<span class="navbar-brand" th:text="${space}"></span>
+				<span th:if="${#strings.isEmpty(space)}" class="navbar-brand" th:text="#{app.title}"></span>
+				<span th:if="${!#strings.isEmpty(space)}" class="navbar-brand" th:text="${space}"></span>
 				<form action="#" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
 						<span sec:authentication="name"></span>
 						<span th:text="#{issues.honorificTitle}" class="me-2"></span>

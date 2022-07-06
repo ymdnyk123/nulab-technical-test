@@ -19,7 +19,8 @@
 		
 		<div th:replace="header::header(${spaceName})"></div>
 		
-		<h4 class="bg-light text-dark ps-2 pt-2 mb-0">
+		<h4 class="bg-light text-dark ps-2 pt-2 mb-0"
+			data-bs-toggle="tooltip" data-bs-placement="bottom" th:title="#{issues.tip.watch}">
 				<i class="bi bi-eye"></i>
 				<span th:text="#{issues.header}"></span>
 		</h4>
@@ -37,13 +38,17 @@
 			</button>
 			<button class="btn btn-danger me-md-2" type="button" id="btnDispModalDelete" disabled
 				 data-bs-toggle="modal" th:data-bs-target="'#' + #{modal.id.delete}">
-				<i class="bi bi-trash me-1"></i>
-				<span th:text="#{issues.btn.dispModalDelete}"></span>
+				 <div data-bs-toggle="tooltip" data-bs-placement="bottom" th:title="#{issues.tip.delete}">
+					<i class="bi bi-trash me-1"></i>
+					<span th:text="#{issues.btn.dispModalDelete}"></span>
+				</div>
 			</button>
 			<button class="btn btn-success me-md-2" type="button" id="btnDispModalSend" disabled
 				data-bs-toggle="modal" th:data-bs-target="'#' + #{modal.id.send}">
-				<i class="bi bi-send me-1"></i>
-				<span th:text="#{issues.btn.dispModalSend}"></span>
+				<div data-bs-toggle="tooltip" data-bs-placement="bottom" th:title="#{issues.tip.send}">
+					<i class="bi bi-send me-1"></i>
+					<span th:text="#{issues.btn.dispModalSend}"></span>
+				</div>
 			</button>
 		</div>
 		<div class="pt-2 bg-light text-dark border-bottom border-dark"></div>
@@ -61,13 +66,15 @@
 					<th class="align-middle"><div class="text-center" th:text="#{issues.priority}"></div></th>
 					<th class="align-middle"><div class="text-center" th:text="#{issues.dueDate}"></div></th>
 					<th class="align-middle"><div class="text-center" th:text="#{issues.estimatedHours}"></div></th>
-					<th class="align-middle">
+					<th class="align-middle"
+						data-bs-toggle="tooltip" data-bs-placement="bottom" th:title="#{issues.tip.backlog}">
 						<div class="text-center">
 							<img src="/images/Backlog_icon.png" class="icon mb-1">
 							<span th:text="#{issues.actualHours}"></span>
 						</div>
 					</th>
-					<th class="align-middle">
+					<th class="align-middle"
+						data-bs-toggle="tooltip" data-bs-placement="bottom" th:title="#{issues.tip.this}">
 						<div class="text-center">
 							<i class="bi bi-clock-history"></i>
 							<span th:text="#{issues.actualHours}"></span>

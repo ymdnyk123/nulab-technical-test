@@ -13,12 +13,10 @@
 		<script th:src="@{/webjars/jquery-cookie/1.4.1-1/jquery.cookie.js}"></script>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
 		<link rel="stylesheet" th:href="@{/css/style.css}">
+		<script th:src="@{/js/error.js}"></script>
 	</head>
 <body>
 	<div th:replace="header::header(${spaceName})"></div>
-	<div>
-		エラーが発生しました。<br>
-		ログインし直してください
-	</div>
 </body>
+<div th:replace="modal::error"></div>
 </html>

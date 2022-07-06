@@ -99,11 +99,6 @@ public class IssuesController {
 			return PageId.LOGIN;
 		}
 		
-		if (Objects.nonNull(authorizedClient)) {
-			
-			throw new MalformedURLException("test exception!!!!");
-		}
-		
 		// BacklogClient取得
 		BacklogClient backlogClient = this.backlogClientService.getClient(authorizedClient);
 		
