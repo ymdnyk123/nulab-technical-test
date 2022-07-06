@@ -99,6 +99,11 @@ public class IssuesController {
 			return PageId.LOGIN;
 		}
 		
+		if (Objects.nonNull(authorizedClient)) {
+			
+			throw new MalformedURLException("test exception!!!!");
+		}
+		
 		// BacklogClient取得
 		BacklogClient backlogClient = this.backlogClientService.getClient(authorizedClient);
 		
@@ -120,6 +125,7 @@ public class IssuesController {
 		List<IssueRow> issueRowList = this.getIssueRowList(userWatches, projectList, myUserId);
 		
 		model.addAttribute(AttributeName.ISSUE_ROW_LIST, issueRowList);
+		
 		
 		return PageId.ISSUES;
 	}

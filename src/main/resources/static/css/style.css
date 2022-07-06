@@ -3,4 +3,23 @@
 img.icon {
 	
 	height: 18px;
-};
+}
+
+img.icon-big {
+	
+	height: 30px;
+}
+
+nav {
+	
+	background-color: #42ce9f;
+}
+
+.bg-bl-color {
+	
+	background-color: #42ce9f;
+}
+
+a.ul-none {
+	text-decoration: none;
+}

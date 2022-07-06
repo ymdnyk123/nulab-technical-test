@@ -19,6 +19,10 @@ public class SecurityConfig {
 			.authorizeHttpRequests(
 					auth -> auth
 					.mvcMatchers("/webjars/**").permitAll()
+					.mvcMatchers("/css/**").permitAll()
+					.mvcMatchers("/images/**").permitAll()
+					.mvcMatchers("/js/loginForm.js").permitAll()
+					.mvcMatchers("/js/error.js").permitAll()
 					.anyRequest().authenticated())
 			.oauth2Login(
 					login -> login

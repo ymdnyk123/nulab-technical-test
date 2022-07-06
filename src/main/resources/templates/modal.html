@@ -43,7 +43,50 @@
 						<span></span>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+							th:text="#{modal.btn.close}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div th:fragment="login" th:remove="tag">
+		<div class="modal fade" id="modalLogin" data-bs-backdrop="static" data-bs-keyboard="false"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" th:text="#{modal.login}"></h5>
+					</div>
+					<div class="modal-body">
+						<div class="position-relative rounded bg-bl-color text-center">
+							<a class="btn stretched-link ul-none" th:href="@{/oauth2/authorization/backlog}">
+								<img class="icon-big mb-1 me-1" src="/images/Backlog_icon.png">
+								<span class="text-white" th:text="#{loginForm.login}"></span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div th:fragment="error" th:remove="tag">
+		<div class="modal fade" id="modalError" data-bs-backdrop="static" data-bs-keyboard="false"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<i class='bi bi-x-circle text-danger'></i>
+							<span th:text="#{modal.error}"></span>
+						</h5>
+					</div>
+					<div class="modal-body" th:utext="#{modal.msg.error}"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+							th:text="#{modal.btn.close}"></button>
 					</div>
 				</div>
 			</div>
