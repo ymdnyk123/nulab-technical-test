@@ -40,6 +40,17 @@ $(function(){
 	/////////////////////////////////////////////////////////////////
 	$('#btnSend').on('click', function() {
 		
+		let thisActualHours = 
+			$('input:radio:checked').parents('tr').find('[name="thisActualHours"]').text();
+		
+		if (!isLessThanMax(thisActualHours)) {
+			
+			// エラーメッセージ表示
+			showFailed('作業実績時間が上限（999.99）を超えています。リセットしてからお試しください。');
+			
+			return;
+		}
+		
 		send();
 	});
 	
@@ -286,6 +297,17 @@ $(function(){
 		
 		$('#modalDelete').modal('hide')
 	}
+
+	/////////////////////////////////////////////////////////////////
+	// 作業実績値チェック
+	// 戻り値：チェック結果
+	// 		true：正常
+	//		false：異常
+	/////////////////////////////////////////////////////////////////
+	function isLessThanMax(thisActualHours) {
+		
+		return 999.99 >= Number(thisActualHours);
+	}
 	
 	/////////////////////////////////////////////////////////////////
 	// 作業実績送信
@@ -360,6 +382,30 @@ $(function(){
 		// 通知モーダル表示
 		$('#modalNotification').modal('show');
 	} 
+	
+	/////////////////////////////////////////////////////////////////
+	// エラーモーダル表示
+	// 引数
+	//	message
+	//	modalId：省略化
+	/////////////////////////////////////////////////////////////////
+	function showFailed(message, modalId) {
+		
+		if (modalId != undefined) {
+			
+			// 確認モーダル閉じる
+			$(modalId).modal('hide')
+		}
+		
+		// 通知モーダル初期化
+		initModalNotification();
+		
+		$('#modalNotification').find('i').addClass('bi bi-check-circle text-success');
+		$('#modalNotification').find('span').text(message);
+		
+		// 通知モーダル表示
+		$('#modalNotification').modal('show');
+	}
 	
 	/////////////////////////////////////////////////////////////////
 	// 作業実績送信終了後
